@@ -7,166 +7,164 @@ class CircularLinkedList:
         self.__tail.next = self.__tail
         self.__numItems = 0
     
-    def insert(self, i: int, newItem):
-        """리스트의 i번째 위치에 새 항목을 삽입"""
-        if i >= 0 and i <= self.__numItems:
-            prev = self.getNode(i-1) if i > 0 else self.__tail
-            prev.next = ListNode(newItem, prev.next)
-            if i == self.__numItems:
+    def insert(self, i: int, newItem) -> None: #i번째 위치에 item 추간
+        if (i >= 0 and i <= self.__numItems):
+            # 0 <= i < self.__numItems => '삽입'
+            # i == self.__numItems => '마지막에 추가
+            prev = self.getNode(i-1)
+            newNode = ListNode(newItem, prev.next) # 새 노드는 i+1 번 노드를 가리켜야함
+            prev.next = newNode # i-1 번 노드는 새로 추가된 노드를 가리켜야함
+            if i == self.__numItems: # 마지막에 추가하는 경우
                 self.__tail = prev.next
             self.__numItems += 1
         else:
             raise IndexError("리스트 범위를 벗어난 인덱스입니다.")
 
-    def append(self, newItem):
-        """리스트의 끝에 새 항목을 추가"""
+    def append(self, newItem) -> None: # list 끝에 새 항목 추가
         self.insert(self.__numItems, newItem)
 
-    def pop(self, index=None):
-        """리스트의 특정 위치의 항목을 제거하고 반환"""
-        if self.__numItems == 0:
-            raise IndexError("비어 있는 리스트에서는 제거할 수 없습니다.")
-
-        if index is None or index == self.__numItems - 1:
-            index = self.__numItems - 1  # 마지막 항목 제거
-
-        if not (-self.__numItems <= index < self.__numItems):
+    def pop(self, *args): # pop(), pop(-1) : 마지막 원소 pop + pop(i): i 번째 원소 pop
+        # list 에 아무것도 없을 경우
+        if self.isEmpty():
+            return None
+        # 일반적인 경우 처리
+        if len(args) != 0:
+            index = args[0]
+        if index == -1 or len(args) == 0: #pop(-1), pop() 의 경우
+            index = self.__numItems-1
+        if (0<=index and index<self.__numItmes): # 리스트 범위 안에 잘 있을 경우
+            prev = self.getNode(index-1)
+            popItem = prev.next.item
+            prev.next = prev.next.next # pop 이전 요소가 pop 된 애의 다음 요소를 가리키게함
+            if(index == self.__numItems-1): # 마지막 요소 pop 시, tail 이전껄로 바뀜
+                self.__tail = prev
+            self.__numItems -= 1
+            return popItem
+        else:
             raise IndexError("리스트 범위를 벗어난 인덱스입니다.")
 
-        if index < 0:
-            index += self.__numItems  # 음수 인덱스 처리
-
-        prev = self.getNode(index - 1)
-        remove = prev.next
-        prev.next = remove.next  # 제거할 노드를 건너뛰고 연결
-
-        if index == self.__numItems - 1:  # 마지막 항목을 제거하는 경우
-            self.__tail = prev  # tail 업데이트
-
-        self.__numItems -= 1
-        return remove.item
-
-
-    def remove(self, x):
-        """리스트에서 x와 같은 첫 번째 항목을 제거"""
-        prev, node = self.__findNode(x)
-        if node:
-            prev.next = node.next
-            if node == self.__tail:
+    def remove(self, x): # x 라는 item 을 갖는 애 삭제
+        (prev, curr) = self.__findNode(x)
+        if curr != None:
+            prev.next = curr.next
+            if curr == self.__tail: #마지막 요소를 삭제할 경우 tail 재설정 해줘야함
                 self.__tail = prev
             self.__numItems -= 1
         else:
-            raise ValueError(f"{x}는 리스트에 없습니다.")
+            return None
 
-    def get(self, i: int):
-        """리스트의 i번째 항목을 반환"""
-        if not (0 <= i < self.__numItems):
-            raise IndexError("리스트 범위를 벗어난 인덱스입니다.")
-        return self.getNode(i).data
+    def get(self, *args): #pop 과 유사하지만 삭제하지 않고 item 만 리턴해줌
+        if self.isEmpty():
+            return None
+        if len(args) != 0: #실제 입력된게 있다면
+            index = args[0]
+        if (len(args) == 0 or index == -1): # 실제 입력된게 없거나 index 가 0일 경우
+            index = self.__numItems - 1
+        if(index >= 0 and index < self.__numItems):
+            return self.getNode(index).item
+        else:
+            return None
 
-    def index(self, x) -> int:
-        """리스트에서 x와 같은 첫 번째 항목의 위치를 반환. 없으면 -1을 반환"""
-        curr = self.__tail.next
-        for index in range(self.__numItems):
-            if curr.data == x:
+    def index(self, x) -> int: # x item 을 가지는 노드의 index
+        index = 0
+        for element in self:
+            if element == x:
                 return index
-            curr = curr.next
-        return -1
+            index += 1
+        return -777
 
     def isEmpty(self) -> bool:
-        """리스트가 비어있는지 확인"""
         return self.__numItems == 0
 
     def size(self) -> int:
-        """리스트의 크기를 반환"""
         return self.__numItems
 
-    def clear(self):
-        """리스트의 모든 항목을 제거"""
+    def clear(self): 
+        # 기존에 있던 dummy 노드를 사용하는게 아니라 다 갖다 버리고 새로 dummy 생성한다는 느낌
+        # 리스트 갈아치울 땐 더미도 새로 만들어버림
+        self.__tail = ListNode("dummy", None)
         self.__tail.next = self.__tail
         self.__numItems = 0
 
     def count(self, x) -> int:
-        """리스트에서 x와 같은 항목의 수를 반환"""
         count = 0
-        curr = self.__tail.next
-        for _ in range(self.__numItems):
-            if curr.data == x:
+        for element in self:
+            if element == x:
                 count += 1
-            curr = curr.next
         return count
 
     def extend(self, a):
-        """다른 리스트 a의 항목들을 현재 리스트의 끝에 추가"""
         for item in a:
             self.append(item)
 
-    def copy(self):
-        """리스트의 복사본을 반환"""
+    def copy(self) -> b'CircularLinkedList':
         new_list = CircularLinkedList()
-        curr = self.__tail.next
-        for _ in range(self.__numItems):
-            new_list.append(curr.data)
-            curr = curr.next
+        for element in self:
+            new_list.append(element)
         return new_list
 
     def reverse(self) -> None:
-        """리스트의 항목들을 역순으로 배치"""
-        prev = self.__tail
-        curr = self.__tail.next
-        for _ in range(self.__numItems):
-            next = curr.next
-            curr.next = prev
+        __head = self.__tail.next # dummy
+        prev = __head #dummy
+        curr = prev.next #0번째 요소
+        next = curr.next #1번째 요소
+        # 0번째 요소 -> 더미 가리키게 (마지막 요소가 됨)
+        curr.next = __head
+        # 더미 -> 기존 마지막 요소 가리키게 (맨 첫번째 요소가 됨)
+        __head.next = self.__tail
+        # 기존 첫번째 요소가 tail 됨
+        self.__tail = curr
+        # 한칸씩 오른쪽으로 옮기고 재정렬(포인팅 새로 할 수 있게)
+        for i in range(self.__numItems - 1):
             prev = curr
             curr = next
-        self.__tail.next.next = self.__tail
-        self.__tail = self.__tail.next
+            next = next.next
+            # 새로 가리키기
+            curr.next = prev
 
     def sort(self) -> None:
-        """리스트를 오름차순으로 정렬"""
-        # 간단한 삽입 정렬로 구현될 수 있지만, 원형 연결 리스트에는 비효율적일 수 있습니다.
-        # 효율적인 정렬 알고리즘을 사용하는 것이 좋습니다.
+        tmp = []
+        for element in self:
+            tmp.append(element)
+        tmp.sort()
+        self.clear()
+        for element in tmp:
+            self.append(element)
 
     def __findNode(self, x) -> (ListNode, ListNode):
-        """x 값을 갖는 노드와 그 이전 노드를 찾아서 반환"""
-        prev = self.__tail
-        curr = self.__tail.next
-        while curr != self.__tail:
-            if curr.data == x:
-                return prev, curr
-            prev = curr
-            curr = curr.next
-        return None, None
+        __head = prev = self.__tail.next #dummy
+        curr = prev.next #0번째 요소
+        while curr != __head:
+            if curr.item == x:
+                return (prev, curr)
+            else:
+                prev = curr
+                curr = curr.next
+        return (None, None)
 
     def getNode(self, i: int) -> ListNode:
-        """i번째 노드를 반환"""
-        curr = self.__tail.next
-        for _ in range(i + 1):
+        curr = self.__tail.next # dummy
+        for index in range(i+1):
             curr = curr.next
         return curr
 
     def printList(self) -> None:
-        """리스트의 모든 항목을 출력"""
-        curr = self.__tail.next
-        for _ in range(self.__numItems):
-            print(curr.data, end=" -> ")
-            curr = curr.next
-        print("리스트의 끝")
+        for element in self:
+            print(element, end = ' ')
+        print()
 
     def __iter__(self):
-        """리스트의 이터레이터를 반환"""
         return CircularLinkedListIterator(self)
 
 class CircularLinkedListIterator:
-    """원형 연결 리스트의 이터레이터 클래스"""
     def __init__(self, alist):
-        self.__head = alist.getNode(-1)
-        self.iterPosition = self.__head.next
+        self.__head = alist.getNode(-1) #dummy
+        self.iterPosition = self.__head.next #0번째 요소
 
     def __next__(self):
-        if self.iterPosition == self.__head:
+        if self.iterPosition == self.__head: #dummy 까지 도달 = 마지막까지 다 돌았다는 뜻
             raise StopIteration
-        else:
+        else: # 현재 요소 리턴 + 다음 요소로 포지션 이동
             item = self.iterPosition.item
             self.iterPosition = self.iterPosition.next
             return item

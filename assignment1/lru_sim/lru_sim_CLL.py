@@ -1,9 +1,11 @@
+from list.circularLinkedList import CircularLinkedList
+
 class CacheSimulator:
     def __init__(self, cache_slots):
         self.cache_slots = cache_slots
         self.cache_hit = 0
         self.tot_cnt = 0
-        self.cache = []
+        self.cache = CircularLinkedList() # circular linked list 사용한 LRU simulator
 
     def do_sim(self, page):
         self.tot_cnt += 1
@@ -14,7 +16,7 @@ class CacheSimulator:
             self.cache.insert(0, page) #page MRU(맨앞)로 배치
 
         else: #miss 났을 때 해당 page 채워넣어야됨
-            if len(self.cache) < cache_slots: # 꽉 안찼으므로 걍 추가하면 됨
+            if self.cache.size() < cache_slots: # 꽉 안찼으므로 걍 추가하면 됨
                 self.cache.insert(0, page)
             else: #꽉 찼을 때, eviction 하고, 추가하면 됨
                 self.cache.pop() #LRU(맨뒤) 제거
@@ -35,4 +37,5 @@ if __name__ == "__main__":
             cache_sim.do_sim(page)
         
         cache_sim.print_stats()
+#2024/3/23 - 홍륜기
 

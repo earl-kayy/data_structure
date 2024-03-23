@@ -30,9 +30,9 @@ class CircularLinkedList:
         # 일반적인 경우 처리
         if len(args) != 0:
             index = args[0]
-        if index == -1 or len(args) == 0: #pop(-1), pop() 의 경우
+        if len(args) == 0 or index == -1: #pop(-1), pop() 의 경우
             index = self.__numItems-1
-        if (0<=index and index<self.__numItmes): # 리스트 범위 안에 잘 있을 경우
+        if (0<=index and index<self.__numItems): # 리스트 범위 안에 잘 있을 경우
             prev = self.getNode(index-1)
             popItem = prev.next.item
             prev.next = prev.next.next # pop 이전 요소가 pop 된 애의 다음 요소를 가리키게함

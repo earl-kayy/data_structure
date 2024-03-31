@@ -79,7 +79,7 @@ int main() {
         }
         
         print_stats(cache_sim);
-        fseek(data_file, 0, SEEK_SET); // 파일 포인터를 다시 파일의 시작으로 옮깁니다.
+        fseek(data_file, 0, SEEK_SET); 
     }
 
     fclose(data_file);
@@ -87,7 +87,7 @@ int main() {
 }
 #include <stdbool.h>
 
-// 원형 연결 리스트의 헤드에 노드를 삽입합니다.
+// 원형 연결 리스트의 헤드에 노드를 삽입
 void insertAtHead(CircularLinkedList *list, const char *page) {
     Node *newNode = (Node *)malloc(sizeof(Node));
     strcpy(newNode->page, page);
@@ -96,7 +96,7 @@ void insertAtHead(CircularLinkedList *list, const char *page) {
     list->size++;
 }
 
-// 원형 연결 리스트에서 특정 페이지를 가진 노드를 제거합니다.
+// 원형 연결 리스트에서 특정 페이지를 가진 노드 제거
 void removeNode(CircularLinkedList *list, const char *page) {
     if (list->size == 0) return; // 비어 있는 리스트면 아무것도 하지 않음
 
@@ -124,7 +124,7 @@ void removeNode(CircularLinkedList *list, const char *page) {
     } while (current != list->tail->next); // 더미 노드로 돌아올 때까지 반복
 }
 
-// 특정 페이지를 가진 노드가 리스트에 있는지 확인합니다.
+// 특정 페이지를 가진 노드가 리스트에 있는지 확인
 int isInList(CircularLinkedList *list, const char *page) {
     if (list->size == 0) return 0;
 
@@ -139,7 +139,7 @@ int isInList(CircularLinkedList *list, const char *page) {
 }
 
 
-// 원형 연결 리스트의 마지막 노드를 제거합니다.
+// 원형 연결 리스트의 마지막 노드를 제거
 void popTail(CircularLinkedList *list) {
     if (list->size == 0) return; // 리스트에 데이터 노드가 없는 경우
 
@@ -153,7 +153,7 @@ void popTail(CircularLinkedList *list) {
         while (current->next != list->tail) {
             current = current->next;
         }
-        // current는 이제 tail 바로 이전의 노드입니다.
+        // current는 이제 tail 바로 이전의 노드
         current->next = list->tail->next; // tail의 다음 노드(더미 노드)를 가리킵니다.
         free(list->tail); // 마지막 실제 데이터 노드 삭제
         list->tail = current; // 새로운 tail 업데이트
@@ -161,9 +161,7 @@ void popTail(CircularLinkedList *list) {
     list->size--;
 }
 
-// 원형 연결 리스트의 크기를 반환합니다.
+// 원형 연결 리스트의 크기를 반환
 int listSize(CircularLinkedList *list) {
     return list->size;
 }
-
-// 필요한 함수들 (insertAtHead, removeNode, isInList, popTail, listSize)의 구현은 여기에 추가해야 합니다.

@@ -97,8 +97,7 @@ if __name__ == "__main__":
     
     producer = Producer(customers, normal, gold, platinum)
     consumer = Consumer(normal, gold, platinum)
-##############################################
-    # consumer = Consumer()    
+       
     producer.start()
     consumer.start()
     time.sleep(10)

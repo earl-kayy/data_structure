@@ -61,7 +61,7 @@ class Consumer:
         self.worker.join() # 위의 False 신호를 보내놓고, 프로세스가 죽었는지 프로세스의 시체를 확인하는 과정
 
 if __name__ == "__main__":
-    
+
     customers = []
     with open("customer.txt", 'r') as file:
         lines = file.readlines()
@@ -76,8 +76,9 @@ if __name__ == "__main__":
 
     __queue = ListQueue() # 큐 객체 생성
     
+    # 큐 객체를 넘겨서, producer/consumer 객체가 서로 같은 큐를 공유할 수 있게끔 함
     producer = Producer(names, __queue)
-    consumer = Consumer(__queue) # 큐 객체를 넘겨서, producer/consumer 객체가 서로 같은 큐를 공유할 수 있게끔 함
+    consumer = Consumer(__queue) 
 
     producer.start()
     consumer.start()

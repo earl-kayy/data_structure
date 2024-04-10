@@ -17,6 +17,7 @@ class Storage:
     # 힙으로 복귀하는 애는 storage 에서 삭제
     def recover(self, lpn):
         if lpn in self.storage:
+            # storage 에서 heap 으로 복귀하면서 freq 하나 증가함
             obj = LpnFreq(lpn, self.storage.get(lpn) + 1)
             self.storage.pop(lpn)
             return obj

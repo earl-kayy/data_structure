@@ -14,9 +14,6 @@ class LpnFreq:
     def __gt__(self, other):
         return self.freq > other.freq
 
-    def __eq__(self, other):
-        return self.lpn == other.lpn
-
     def getLpn(self):
         return self.lpn
 

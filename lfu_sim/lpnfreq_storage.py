@@ -22,7 +22,7 @@ class Storage:
             return obj
         else:
             return None
-    # lpn 이 cache 에 없을 때, 참조된 적이 한번이라도 있는지 확인
+    # lpn 이 cache 에 없을 때, 참조된 적이 한번이라도 있는지 확인위한 함수
     def search(self, lpn):
         if lpn in self.storage:
             return True

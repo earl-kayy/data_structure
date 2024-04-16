@@ -1,10 +1,11 @@
 from lpnFreq import *
 
+# LFU 캐시의 구현 (가장 freq 작은 객체가 맨 위 자리에 위치)
 class MinHeap:
     def __init__(self):
+            # heap 의 내부 각 요소는 LpnFreq 의 객체로 구성
             self.__heap = []
-            # self.storage = Storage()
-    # 각 요소는 lpnfreq 객체로 구성        
+       
     def insert(self, lpnfreq):
         self.__heap.append(lpnfreq)
         self.__percolateUp(len(self.__heap)-1)
@@ -23,11 +24,9 @@ class MinHeap:
         if (not self.isEmpty()):
             # 가장 작은 lpnfreq 객체를 min 값에 넣음
             min = self.__heap[0]
-            # storage 에 마지막 상태 저장
-            # storage.add(min)
             # 기존 맨 앞자리(가장 작은애가 와야되는 자리)에 맨 뒤에 있던 애를 넣어줌
             self.__heap[0] = self.__heap.pop()
-            # 바뀐 맨 앞에 오는 애를 자기한테 맞는 자리에 올 때까지 천천히 내려보냄 => 일종의 재정렬(min __heap 의 구조를 유지하기 위함)
+            # 바뀐 맨 앞에 오는 애를 자기한테 맞는 자리에 올 때까지 천천히 내려보냄
             self.__percolateDown(0)
             return min
         else:
@@ -69,5 +68,7 @@ class MinHeap:
                 return (self.__heap[i], i)
         return None, None
 
+    # heap 의 객체에 freq 갱신 후, min heap 구조 유지하기 위해 아래쪽으로 내려보낼 수 있으면 내려보내야함
+    # 복잡도 최소화 위해 해당 지점을 지정해 거기서부터 정렬 시작
     def updateHeap(self, index):
         self.__percolateDown(index)
